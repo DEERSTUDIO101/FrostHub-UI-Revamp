@@ -74,16 +74,16 @@ function FrostHub:CreateWindow(config)
     self.CreateTopBar(window, config)
     
     -- Create Tab System
-    window:CreateTabSystem()
+    self:CreateTabSystem()
     
     -- Create Notification System
-    window:CreateNotificationSystem()
+    self:CreateNotificationSystem()
     
     -- Setup Dragging
-    window:SetupDragging()
+    self:SetupDragging()
     
     -- Setup Control Buttons
-    window:SetupControlButtons()
+    self:SetupControlButtons()
     
     return window
 end
