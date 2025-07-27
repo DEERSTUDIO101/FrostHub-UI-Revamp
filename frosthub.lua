@@ -9,36 +9,6 @@ local CoreGui = game:GetService("CoreGui")
 local FrostHub = {}
 FrostHub.__index = FrostHub
 
--- Lucide Icons Integration (aus https://github.com/frappedevs/lucideblox/blob/master/src/modules/util/icons.lua)
-local LucideIcons = {
-    -- Beispiel-Icons (du kannst das ganze Repo hinzufügen)
-    ["check"] = "M5 13l4 4L19 7",
-    ["x"] = "M6 18L18 6M6 6l12 12",
-    ["moon"] = "M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z",
-    ["sun"] = "M12 3v2M16.24 7.76l1.42 1.42M21 12h-2M16.24 16.24l1.42-1.42M12 21v-2M7.76 16.24l-1.42-1.42M3 12h2M7.76 7.76l-1.42 1.42"
-}
-
--- Helper für SVG Pfade in UI (vereinfacht)
-local function CreateIcon(iconName, size, color)
-    local iconPath = LucideIcons[iconName]
-    if not iconPath then
-        warn("Icon "..iconName.." nicht gefunden!")
-        return nil
-    end
-    local Frame = Instance.new("Frame")
-    Frame.Size = size or UDim2.new(0, 16, 0, 16)
-    Frame.BackgroundTransparency = 1
-
-    local UIStroke = Instance.new("UIStroke", Frame)
-    UIStroke.Color = color or Color3.new(1, 1, 1)
-    UIStroke.Thickness = 1.5
-
-    -- Da Roblox kein SVG direkt kann, wir bauen ein vereinfachtes Icon als Linien (mock)
-    -- Für volle SVG Unterstützung müsstest du ein External Plugin oder Images benutzen.
-    -- Hier nur als Platzhalter
-    return Frame
-end
-
 -- Basis-Funktion UI-Erstellung
 local function Create(className, props)
     local obj = Instance.new(className)
