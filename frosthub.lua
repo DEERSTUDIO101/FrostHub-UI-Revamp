@@ -71,7 +71,7 @@ function FrostHub:CreateWindow(config)
     gradient.Parent = mainFrame
     
     -- Create Top Bar
-    window:CreateTopBar(config)
+    self.CreateTopBar(window, config)
     
     -- Create Tab System
     window:CreateTabSystem()
