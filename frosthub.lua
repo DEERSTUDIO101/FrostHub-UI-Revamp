@@ -1,4 +1,4 @@
--- FrostHub UI Library v1.0
+-- FrostHub UI Library v1.0 - FIXED VERSION
 -- Modulare UI Library für Roblox Scripts
 
 local FrostHub = {}
@@ -70,20 +70,27 @@ function FrostHub:CreateWindow(config)
     gradient.Rotation = 45
     gradient.Parent = mainFrame
     
+    -- Copy all FrostHub methods to window
+    for key, value in pairs(FrostHub) do
+        if type(value) == "function" and key ~= "CreateWindow" then
+            window[key] = value
+        end
+    end
+    
     -- Create Top Bar
-    self.CreateTopBar(window, config)
+    window:CreateTopBar(config)
     
     -- Create Tab System
-    self:CreateTabSystem()
+    window:CreateTabSystem()
     
     -- Create Notification System
-    self:CreateNotificationSystem()
+    window:CreateNotificationSystem()
     
     -- Setup Dragging
-    self:SetupDragging()
+    window:SetupDragging()
     
     -- Setup Control Buttons
-    self:SetupControlButtons()
+    window:SetupControlButtons()
     
     return window
 end
@@ -649,8 +656,8 @@ function FrostHub:CreateSlider(parent, config)
         if connection then
             connection:Disconnect()
         end
-        connection = UserInputService.InputChanged:Connect(function(input)
-            if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        connection = Players.LocalPlayer:GetMouse().Move:Connect(function()
+            if dragging then
                 local mouse = Players.LocalPlayer:GetMouse()
                 local relativeX = math.clamp(mouse.X - sliderTrack.AbsolutePosition.X, 0, sliderTrack.AbsoluteSize.X)
                 local percentage = relativeX / sliderTrack.AbsoluteSize.X
@@ -668,15 +675,14 @@ function FrostHub:CreateSlider(parent, config)
         end
     end
     
-    sliderTrack.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            startDrag()
-            local mouse = Players.LocalPlayer:GetMouse()
-            local relativeX = math.clamp(mouse.X - sliderTrack.AbsolutePosition.X, 0, sliderTrack.AbsoluteSize.X)
-            local percentage = relativeX / sliderTrack.AbsoluteSize.X
-            currentValue = min + (max - min) * percentage
-            updateSlider()
-        end
+    -- FIXED: Use MouseButton1Down instead of InputBegan
+    sliderTrack.MouseButton1Down:Connect(function()
+        startDrag()
+        local mouse = Players.LocalPlayer:GetMouse()
+        local relativeX = math.clamp(mouse.X - sliderTrack.AbsolutePosition.X, 0, sliderTrack.AbsoluteSize.X)
+        local percentage = relativeX / sliderTrack.AbsoluteSize.X
+        currentValue = min + (max - min) * percentage
+        updateSlider()
     end)
     
     UserInputService.InputEnded:Connect(function(input)
@@ -795,22 +801,25 @@ function FrostHub:ShowNotification(config)
     end)
 end
 
+-- FIXED: Complete SetupDragging function with proper mouse handling
 function FrostHub:SetupDragging()
     local dragging = false
     local dragStart = nil
     local startPos = nil
     
-    self.TopBar.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragging = true
-            dragStart = input.Position
-            startPos = self.ShadowFrame.Position
-        end
+    -- FIXED: Use MouseButton1Down instead of InputBegan
+    self.TopBar.MouseButton1Down:Connect(function()
+        dragging = true
+        local mouse = Players.LocalPlayer:GetMouse()
+        dragStart = Vector2.new(mouse.X, mouse.Y)
+        startPos = self.ShadowFrame.Position
     end)
     
-    UserInputService.InputChanged:Connect(function(input)
-        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-            local delta = input.Position - dragStart
+    -- FIXED: Use Mouse.Move instead of InputChanged
+    Players.LocalPlayer:GetMouse().Move:Connect(function()
+        if dragging then
+            local mouse = Players.LocalPlayer:GetMouse()
+            local delta = Vector2.new(mouse.X, mouse.Y) - dragStart
             self.ShadowFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
         end
     end)
