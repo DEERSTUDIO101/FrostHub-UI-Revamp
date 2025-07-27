@@ -1,11 +1,5 @@
--- FrostHub Library Beispiel Script
--- Wie man die FrostHub UI Library verwendet
 
--- Library laden (normalerweise über loadstring)
--- local FrostHub = loadstring(game:HttpGet("https://raw.githubusercontent.com/yourusername/FrostHub-Library/main/source.lua"))()
-
--- Für dieses Beispiel nehmen wir an, dass die Library bereits geladen ist
-local FrostHub = require(script.FrostHubLibrary) -- Falls als ModuleScript
+local FrostHub = loadstring(game:HttpGet("https://raw.githubusercontent.com/DEERSTUDIO101/FrostHub-UI-Revamp/refs/heads/main/frosthub.lua"))()
 
 -- Window erstellen
 local Window = FrostHub:CreateWindow({
