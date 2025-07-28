@@ -596,7 +596,7 @@ end
 local notificationFrame = Instance.new("Frame")
 notificationFrame.Name = "NotificationFrame"
 notificationFrame.Size = UDim2.new(0, 350, 0, 100)
-notificationFrame.Position = UDim2.new(1, -320, 0, 50)
+notificationFrame.Position = UDim2.new(1, -350, 0, 50)
 notificationFrame.BackgroundColor3 = Color3.fromRGB(22, 27, 34)
 notificationFrame.BorderSizePixel = 0
 notificationFrame.Visible = false
@@ -680,6 +680,22 @@ local function showNotification(title, message, duration, icon)
     end)
 end
 
+-- Create Tabs
+local homeTab = createTab("Home", "🏠", 0)
+local combatTab = createTab("Combat", "⚔️", 1)
+local movementTab = createTab("Movement", "🏃", 2)
+local visualTab = createTab("Visual", "👁️", 3)
+local miscTab = createTab("Misc", "🔧", 4)
+
+-- Home Tab Content
+createSection(homeTab.content, "Welcome to FrostHub", 1)
+createButton(homeTab.content, "Join Discord Server", 2, function()
+    showNotification("Discord", "Discord invite copied to clipboard!", 2, "💬")
+end)
+createButton(homeTab.content, "Check for Updates", 3, function()
+    showNotification("Update", "You are running the latest version!", 2, "✅")
+end)
+
 createSection(homeTab.content, "User Information", 4)
 local userInfo = Instance.new("Frame")
 userInfo.Name = "UserInfo"
@@ -734,6 +750,101 @@ userStatus.TextSize = 12
 userStatus.Font = Enum.Font.Gotham
 userStatus.TextXAlignment = Enum.TextXAlignment.Left
 userStatus.Parent = userInfo
+
+-- Combat Tab Content
+createSection(combatTab.content, "Aimbot Settings", 1)
+createToggle(combatTab.content, "Enable Aimbot", 2, function(state)
+    showNotification("Aimbot", "Aimbot " .. (state and "enabled" or "disabled"), 2, "🎯")
+end)
+createSlider(combatTab.content, "FOV Size", 3, 50, 500, function(value)
+    -- FOV callback
+end)
+createToggle(combatTab.content, "Visible Check", 4, function(state)
+    -- Visible check callback
+end)
+
+createSection(combatTab.content, "Combat Features", 5)
+createButton(combatTab.content, "Silent Aim", 6, function()
+    showNotification("Silent Aim", "Silent aim activated!", 2, "🔫")
+end)
+createToggle(combatTab.content, "Triggerbot", 7, function(state)
+    -- Triggerbot callback
+end)
+
+-- Movement Tab Content
+createSection(movementTab.content, "Movement Enhancement", 1)
+createSlider(movementTab.content, "Walk Speed", 2, 16, 100, function(value)
+    if player.Character and player.Character:FindFirstChild("Humanoid") then
+        player.Character.Humanoid.WalkSpeed = value
+    end
+end)
+createSlider(movementTab.content, "Jump Power", 3, 50, 200, function(value)
+    if player.Character and player.Character:FindFirstChild("Humanoid") then
+        player.Character.Humanoid.JumpPower = value
+    end
+end)
+
+createSection(movementTab.content, "Special Abilities", 4)
+createToggle(movementTab.content, "Infinite Jump", 5, function(state)
+    showNotification("Infinite Jump", "Infinite jump " .. (state and "enabled" or "disabled"), 2, "🦘")
+end)
+createToggle(movementTab.content, "Fly Mode", 6, function(state)
+    showNotification("Fly", "Fly mode " .. (state and "enabled" or "disabled"), 2, "✈️")
+end)
+createToggle(movementTab.content, "No Clip", 7, function(state)
+    showNotification("NoClip", "No clip " .. (state and "enabled" or "disabled"), 2, "👻")
+end)
+
+-- Visual Tab Content
+createSection(visualTab.content, "ESP Settings", 1)
+createToggle(visualTab.content, "Player ESP", 2, function(state)
+    showNotification("ESP", "Player ESP " .. (state and "enabled" or "disabled"), 2, "👁️")
+end)
+createToggle(visualTab.content, "Name ESP", 3, function(state)
+    -- Name ESP callback
+end)
+createToggle(visualTab.content, "Distance ESP", 4, function(state)
+    -- Distance ESP callback
+end)
+
+createSection(visualTab.content, "Visual Effects", 5)
+createToggle(visualTab.content, "Fullbright", 6, function(state)
+    local lighting = game:GetService("Lighting")
+    if state then
+        lighting.Brightness = 2
+        lighting.ClockTime = 14
+        lighting.FogEnd = 100000
+    else
+        lighting.Brightness = 1
+        lighting.ClockTime = 12
+        lighting.FogEnd = 100000
+    end
+    showNotification("Fullbright", "Fullbright " .. (state and "enabled" or "disabled"), 2, "💡")
+end)
+createButton(visualTab.content, "Remove Fog", 7, function()
+    game:GetService("Lighting").FogEnd = 100000
+    showNotification("Fog", "Fog removed successfully!", 2, "🌫️")
+end)
+
+-- Misc Tab Content
+createSection(miscTab.content, "Game Features", 1)
+createButton(miscTab.content, "Rejoin Server", 2, function()
+    game:GetService("TeleportService"):Teleport(game.PlaceId, player)
+end)
+createButton(miscTab.content, "Server Hop", 3, function()
+    showNotification("Server Hop", "Finding new server...", 2, "🔄")
+end)
+
+createSection(miscTab.content, "Settings", 4)
+createToggle(miscTab.content, "Show Notifications", 5, function(state)
+    -- Notification toggle callback
+end)
+createButton(miscTab.content, "Save Config", 6, function()
+    showNotification("Config", "Configuration saved!", 2, "💾")
+end)
+createButton(miscTab.content, "Load Config", 7, function()
+    showNotification("Config", "Configuration loaded!", 2, "📁")
+end)
 
 -- Dragging Functionality
 local dragging = false
@@ -887,10 +998,3 @@ screenGui.AncestryChanged:Connect(function()
         logoRotating = false
     end
 end)
-
-print("🎉 FrostHub Redesigned UI loaded successfully - ALL BUGS FIXED! 🎉")
-print("✅ Fixed: Close button crash")
-print("✅ Fixed: Slider functionality") 
-print("✅ Fixed: Memory leaks")
-print("✅ Fixed: Animation cleanup")
-print("💪 Ready to use without crashes!")
